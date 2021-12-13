@@ -16,7 +16,19 @@ public class CuratorDemo {
         PathChildrenCacheListener listener = new PathChildrenCacheListener() {
             @Override
             public void childEvent(CuratorFramework curatorFramework, PathChildrenCacheEvent pathChildrenCacheEvent) throws Exception {
-                System.out.println("hello,eventType is :" + pathChildrenCacheEvent.getType());
+                switch (pathChildrenCacheEvent.getType()){
+                    case INITIALIZED:
+                        System.out.println("初始化===================");
+                        break;
+                    case CHILD_ADDED:
+                        System.out.println("增加子节点===============" + pathChildrenCacheEvent.getData());
+                        break;
+                    case CHILD_REMOVED:
+                        System.out.println("正在移除子节点===============");
+                        break;
+                    case CHILD_UPDATED:
+                        System.out.println("正在更新子节点================");
+                }
             }
         };
         CuratorCacheListener cacheListener = CuratorCacheListener.builder().forPathChildrenCache("/node",curatorFramework,listener).build();
@@ -24,8 +36,18 @@ public class CuratorDemo {
         curatorCache.listenable().addListener(new CuratorCacheListener() {
             @Override
             public void event(Type type, ChildData oldData, ChildData data) {
+                switch (type){
+                    case NODE_CREATED:
+                        System.out.println("创建节点！！！！！！！！！！！！！！！！oldData is :" + oldData + "newData is :" + data);
+                        break;
+                    case NODE_CHANGED:
+                        System.out.println("更新节点！！！！！！！！！！！！！！！！oldData is :" + oldData + "newData is :" + data);
+                        break;
+                    case NODE_DELETED:
+                        System.out.println("删除节点！！！！！！！！！！！！！！！！oldData is :" + oldData + "newData is :" + data);
+                        break;
+                }
                 System.out.println("==================================================");
-                System.out.println(type);
             }
         });
         curatorCache.start();
